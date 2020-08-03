@@ -1,0 +1,24 @@
+type: web    # type: worker, web or none
+
+# important only for type worker or web
+pv:
+  class: low
+  nfs_server: k3
+  nfs_path: /nfs1
+  
+configMap:
+  color: red
+
+deployment:
+  tier: frontent
+  replicas: 3
+  container:
+    name: nginx
+    repository: darek73pl/nginx-worker
+    tag: "v02"
+  content: "WEB"     # content of index.html
+
+service:
+  exposed: true      # portType: true - LoadBalancer; false - ClusterIP
+  port: 80 
+  

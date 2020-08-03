@@ -1,0 +1,12 @@
+dependencies:
+- name: webworker
+  repository: http://repository.local:8081
+  version: 1.0.0
+- name: webworker
+  repository: http://repository.local:8081
+  version: 1.0.0
+- name: webworker
+  repository: http://repository.local:8081
+  version: 1.0.0
+digest: sha256:7d7c903d553ebd2974acf16005db7284dfa635f7fe4f7975b9d743538998aaad
+generated: "2020-08-01T13:13:41.2091248+02:00"

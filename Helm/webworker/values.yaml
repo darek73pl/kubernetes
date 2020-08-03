@@ -1,0 +1,19 @@
+
+webServer:
+  indexContent: WEB
+  color: green
+  tier: frontend
+  replicas: 3
+  initScriptPath: "init-script.sh"
+
+updater:
+  enabled: true
+  updaterScriptPath: "updater-script.sh"
+
+image:
+  repository: nginx
+  version: 1.19
+
+service:
+  exposed: true
+  port: 80

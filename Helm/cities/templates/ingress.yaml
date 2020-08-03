@@ -1,0 +1,58 @@
+{{- if .Values.ingress.hostEnabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-host-ing
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  backend:
+    serviceName: {{ $.Release.Name }}-default-svc
+    servicePort: {{ .Values.default.service.port | default 80 }}
+  rules:
+    {{- range  $i, $val:=.Values }}
+    {{- if not (or (eq $i "ingress") (eq $i "default")) }}
+    - host: {{ $val.service.ingressHost | default (print $.Release.Name  "-" $i "-webworker.local") }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ $.Release.Name }}-{{ $i }}-svc
+              servicePort: {{ $val.service.port | default 80 }}
+     {{- end }}
+     {{- end }}
+{{- end }}
+
+--- 
+
+
+{{- if .Values.ingress.pathEnabled }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-path-ing
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  backend:
+    serviceName: {{ $.Release.Name }}-default-svc
+    servicePort: {{ .Values.default.service.port | default 80 }}
+  rules:
+    - host: {{ .Values.ingress.pathHost | default (print $.Release.Name "-" $.Chart.Name ".local") }}
+      http:
+        paths:
+        {{- range  $i, $val:=.Values }}
+        {{- if not (or (eq $i "ingress") (eq $i "default")) }}
+          - path: /{{ $i }}(/|$)(.*)
+            backend:
+              serviceName: {{ $.Release.Name }}-{{ $i }}-svc
+              servicePort: {{ $val.service.port | default 80 }}
+        {{- end }}
+        {{- end }}
+    - http:
+        paths:
+          - path: /(.*)
+            backend:
+              serviceName: {{ $.Release.Name }}-default-svc
+              servicePort: {{ .Values.default.service.port | default 80 }}
+{{- end }}

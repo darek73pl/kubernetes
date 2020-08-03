@@ -1,0 +1,57 @@
+ingress:
+  hostEnabled: true
+  pathEnabled: true
+  pathHost: colors.local
+
+gdansk:
+  webServer:
+    indexContent: gdansk
+    color: green
+  service:
+    exposed: false
+    ingressHost: green-webworker.local
+
+krakow:
+  webServer:
+    indexContent: krakow
+    color: red
+  service:
+    exposed: false  
+    ingressHost: red-webworker.local
+
+warszawa:
+  webServer:
+    indexContent: warszawa
+    color: blue
+  service:
+    exposed: false
+    ingressHost: blue-webworker.local
+
+default:
+  webServer:
+    indexContent: sorry
+    color: yellow
+  updater:
+    enabled: false
+  service:
+    exposed: false
+
+
+# webServer:
+#   indexContent: WEB
+#   color: green
+#   tier: frontend
+#   replicas: 3
+#   initScriptPath: "init-script.sh" 
+
+# updater:
+#   enabled: true
+#   updaterScriptPath: "updater-script.sh"
+
+# image:
+#   repository: nginx
+#   version: 1.19
+
+# service:
+#   exposed: true
+#   port: 80

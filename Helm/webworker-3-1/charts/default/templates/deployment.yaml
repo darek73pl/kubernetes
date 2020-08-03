@@ -1,0 +1,49 @@
+{{- $main_name:= print .Release.Name "-" .Chart.Name }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $main_name }}-depl
+{{- with .Values.deployment }}  
+  labels:
+    tier: {{ .tier }}
+spec:
+  replicas: {{ .replicas }}
+  selector:
+    matchLabels:
+      app: {{ $main_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $main_name }}
+    spec:
+      containers:
+        - name: {{ .container.name }}
+          image: {{ .container.repository }}:{{ .container.tag }}
+          envFrom:			
+            - configMapRef:
+                name: {{ $main_name }}-cm
+          env:
+            - name: POD_NAME					
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: INDEX_CONTENT
+              value: {{ .content }}
+          ports:
+            - containerPort: 80  
+          {{- if eq $.Values.type "worker" }}
+          volumeMounts:
+            - mountPath: "/target"
+              name: {{ $main_name }}-vol
+          {{- else if eq $.Values.type "web" }}
+          volumeMounts:
+            - mountPath: "/usr/share/nginx/html"
+              name: {{ $main_name }}-vol
+          {{- end }}
+      {{- if or (eq $.Values.type "web") (eq $.Values.type "worker") }}
+      volumes:
+        - name: {{ $main_name }}-vol
+          persistentVolumeClaim:
+            claimName: {{ $main_name }}-pvc
+      {{- end }}
+{{- end}}

@@ -1,0 +1,47 @@
+ingress:
+  hostEnabled: false
+  pathEnabled: true
+  pathHost: colors.local
+
+torun:
+  webServer:
+    indexContent: torun
+    color: pink
+  service:
+    exposed: false
+
+sopot:
+  webServer:
+    indexContent: sopot
+    color: yellow
+  service:
+    exposed: false  
+
+default:
+  webServer:
+    indexContent: sorry
+    color: yellow
+  updater:
+    enabled: false
+  service:
+    exposed: false
+
+
+# webServer:
+#   indexContent: WEB
+#   color: green
+#   tier: frontend
+#   replicas: 3
+#   initScriptPath: "init-script.sh" 
+
+# updater:
+#   enabled: true
+#   updaterScriptPath: "updater-script.sh"
+
+# image:
+#   repository: nginx
+#   version: 1.19
+
+# service:
+#   exposed: true
+#   port: 80

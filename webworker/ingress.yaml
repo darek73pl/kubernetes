@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-worker-host-ing
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: red-webworker.local
+      http:
+        paths:
+          - backend:
+              serviceName: web-worker-svc
+              servicePort: 80
+
+--- 
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-worker-path-ing
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: colors.local
+      http:
+        paths:
+          - path: /red(/|$)(.*)
+            backend:
+              serviceName: web-worker-svc
+              servicePort: 80
+    

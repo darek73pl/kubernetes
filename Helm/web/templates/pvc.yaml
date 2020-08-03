@@ -1,0 +1,14 @@
+{{- if or (eq .Values.type "web") (eq .Values.type "worker") }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: {{ .Values.pv.class }}
+  {{- end }}

@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-depl
+  labels:
+    tier: {{ .Values.webServer.tier }}
+spec:
+  replicas: {{ .Values.webServer.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Chart.Name }}-webworker
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Chart.Name }}-webworker
+    spec:
+      initContainers:
+        - name: index-creator
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "/tmp/init.sh"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: COLOR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+                  key: COLOR
+            - name: INDEX_CONTENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+                  key: INDEX_CONTENT
+          volumeMounts:
+            - name: init-script-vol
+              mountPath: /tmp
+            - name: target-vol
+              mountPath: /target
+        - name: service-checker
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - until nslookup {{ .Release.Name }}-{{ .Chart.Name }}-svc.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local >/dev/null;  do echo waiting for web-worker service; sleep 2; done; echo web-worker service is up !!
+      containers:
+      {{- if .Values.updater.enabled }}
+        - name: time-updater
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "/tmp/updater.sh"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: COLOR
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+                  key: COLOR
+            - name: INDEX_CONTENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+                  key: INDEX_CONTENT
+          volumeMounts:
+            - name: updater-script-vol
+              mountPath: /tmp
+            - name: target-vol
+              mountPath: /target
+        {{- end }}
+        - name: web-server
+          image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+          volumeMounts:
+            - name: target-vol
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: target-vol
+          emptyDir: {}
+        - name: init-script-vol
+          configMap:
+            defaultMode: 0700
+            name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+            items:
+              - key: init-script 
+                path: init.sh    
+        {{- if .Values.updater.enabled }}      
+        - name: updater-script-vol
+          configMap:
+            defaultMode: 0700
+            name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+            items:
+              - key: updater-script 
+                path: updater.sh  
+        {{- end }}

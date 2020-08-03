@@ -1,0 +1,12 @@
+dependencies:
+- name: web
+  repository: http://repository.local:8081
+  version: 0.1.0
+- name: worker
+  repository: http://repository.local:8081
+  version: 0.1.0
+- name: default
+  repository: http://repository.local:8081
+  version: 0.1.0
+digest: sha256:d6d495f8ffdc8c6e8b4ce14a71ead8edb96763047625b78c7b2e1086f2318ec3
+generated: "2020-07-22T11:34:39.2526825+02:00"

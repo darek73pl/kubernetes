@@ -1,0 +1,17 @@
+{{- with .Values.webServer }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $.Release.Name }}-{{ $.Chart.Name }}-cm
+data:
+  INDEX_CONTENT: {{ .indexContent }}
+  COLOR: {{ .color }}
+  init-script: |-
+{{ $.Files.Get .initScriptPath | indent 4 }}
+{{- end }}
+{{- with .Values.updater }}
+{{- if .enabled }}
+  updater-script: |-
+{{ $.Files.Get .updaterScriptPath | indent 4 }}
+{{- end }}
+{{- end }}

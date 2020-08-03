@@ -1,0 +1,80 @@
+ host_ingress:
+   enabled: true
+#   web_host: web.local                    # optional d: {{ .Release.Name}}-web.local
+#   worker_host: worker.local              # optional d: {{ .Release.Name}}-worker.local
+      
+ path_ingress:
+   enabled: true 
+#   host: colors.local                     # optional d: {{ .Release.Name}}-webworker.local
+#   web_path: /web                         # optional d: /web
+#   worker_path: /worker                   # optional d: /worker
+ 
+ web: 
+   type: web                               # type: worker, web or none d: web
+
+#   # important only for type worker or web
+#   pv:
+#     class: low                           # d: low
+#     nfs_server: k3                       # d: k3
+#     nfs_path: /nfs1                      # d: /nfs1
+
+   configMap:
+     color: green                          # d: green
+
+#   deployment:
+#     tier: frontent                       # d: frontend
+#     replicas: 3                          # d: 3
+#     container:
+#       name: nginx                        # d: nginx
+#       repository: darek73pl/nginx-worker # d: darek73pl/nginx-worker
+#       tag: "v02"                         # d: "v02"
+#     content: "WEB"                       # content of index.html d: "WEB"
+
+#   service:
+#     exposed: true                        # portType: true - LoadBalancer; false - ClusterIP d: true
+#     port: 80                             # d: 80
+
+ worker: 
+   type: worker                            # type: worker, web or none d: web
+
+#   # important only for type worker or web
+#   pv:
+#     class: low                           # d: low
+#     nfs_server: k3                       # d: k3
+#     nfs_path: /nfs1                      # d: /nfs1
+
+   configMap:
+     color: green                          # d: green
+
+#   deployment:
+#     tier: backend                        # d: backend
+#     replicas: 1                          # d: 1
+#     container:
+#       name: nginx                        # d: nginx
+#       repository: darek73pl/nginx-worker # d: darek73pl/nginx-worker
+#       tag: "v02"                         # d: "v02"
+#     content: "WORKER"                    # content of index.html d: "WORKER"
+
+#   service:
+#     exposed: true                        # portType: true - LoadBalancer; false - ClusterIP d: true
+#     port: 80                             # d: 80
+
+
+ default: 
+   type: none                              # type: worker, web or none d: none  
+
+#   configMap:
+#     color: yellow                        # d: yellow
+
+#   deployment:
+#     tier: frontent                       # d: frontend
+#     replicas: 1                          # d: 1
+#     container:
+#       name: nginx                        # d: nginx
+#       repository: darek73pl/nginx-worker # d: darek73pl/nginx-worker
+#       tag: "v02"                         # d: "v02"
+#     content: "SORRY"                     # content of index.html d: "SORRY"
+
+#   service:
+#     exposed: true                        # portType: true - LoadBalancer; false - ClusterIP d: true
+#     port: 80                             # d: 80

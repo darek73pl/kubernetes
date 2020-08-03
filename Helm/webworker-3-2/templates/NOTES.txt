@@ -1,0 +1,30 @@
+{{ with .Values}}
+Congratulations !!!
+
+You've just run webworker version: {{ $.Chart.Version }}  
+{{- if .host_ingress.enabled }}
+
+You may reach it by: 
+
+http://{{ .host_ingress.web_host | default (print $.Release.Name  "-web.local") }} 
+http://{{ .host_ingress.worker_host | default (print $.Release.Name  "-worker.local") }}
+{{- end }}
+{{- if .path_ingress.enabled }}
+{{- if .host_ingress.enabled }}
+
+or
+{{- else }}
+
+You may reach it by: 
+{{- end }}
+
+http://{{ .path_ingress.host | default (print $.Release.Name  "-webworker.local") }}{{ .path_ingress.web_path | default "/web" }}
+http://{{ .path_ingress.host | default (print $.Release.Name  "-webworker.local") }}{{ .path_ingress.worker_path | default "/worker" }}
+
+{{- end }}
+{{- if not (or .host_ingress.enabled .path_ingress.enabled) }}
+
+Portal is not accesible from outside. Consider enabling ingress options.
+
+{{ end }}
+{{ end }}

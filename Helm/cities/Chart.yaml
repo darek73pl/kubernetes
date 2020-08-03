@@ -1,0 +1,5 @@
+apiVersion: v2			# mandatory, v2 for Helm 3
+name: city-webworker		# mandatory; name the same as directory
+version: 1.0.1			# mandatory; major.minor.patch
+appVersion: "1.0"
+description: Web-worker for updating time

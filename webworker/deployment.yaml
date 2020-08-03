@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webworker-depl
+  labels:
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webworker
+  template:
+    metadata:
+      labels:
+        app: webworker
+    spec:
+      initContainers:
+        - name: index-creator
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "/tmp/init.sh"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: COLOR
+              valueFrom:
+                configMapKeyRef:
+                  name: webworker-cm
+                  key: COLOR
+            - name: INDEX_CONTENT
+              valueFrom:
+                configMapKeyRef:
+                  name: webworker-cm
+                  key: INDEX_CONTENT
+          volumeMounts:
+            - name: init-script-vol
+              mountPath: /tmp
+            - name: target-vol
+              mountPath: /target
+        - name: service-checker
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "until nslookup web-worker-svc.$(cat  /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local >/dev/null;  do echo waiting for web-worker service; sleep 2; done; echo web-worker service is up !!"
+      containers:
+        - name: time-updater
+          image: busybox:1.32
+          command: 
+            - "/bin/sh"
+          args:
+            - "-c"
+            - "/tmp/updater.sh"
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: COLOR
+              valueFrom:
+                configMapKeyRef:
+                  name: webworker-cm
+                  key: COLOR
+            - name: INDEX_CONTENT
+              valueFrom:
+                configMapKeyRef:
+                  name: webworker-cm
+                  key: INDEX_CONTENT
+          volumeMounts:
+            - name: updater-script-vol
+              mountPath: /tmp
+            - name: target-vol
+              mountPath: /target
+        - name: web-server
+          image: nginx:1.19
+          volumeMounts:
+            - name: target-vol
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: target-vol
+          emptyDir: {}
+        - name: init-script-vol
+          configMap:
+            defaultMode: 0700
+            name: webworker-cm
+            items:
+              - key: init-script 
+                path: init.sh          
+        - name: updater-script-vol
+          configMap:
+            defaultMode: 0700
+            name: webworker-cm
+            items:
+              - key: updater-script 
+                path: updater.sh  

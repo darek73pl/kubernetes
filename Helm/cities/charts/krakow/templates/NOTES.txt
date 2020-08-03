@@ -1,0 +1,15 @@
+
+Congratulations !!!
+
+You've just run webworker version:  
+{{- if .Values.updater.enabled }} updater {{ else }} standalone {{ end }} 
+{{ if .Values.service.exposed }}
+You may reach the portal using commands:
+
+SERVICE_ADDRESS=$(kubectl get services {{ $.Release.Name}}-{{ $.Chart.Name }}-svc -o jsonpath='{ .status.loadBalancer.ingress[0].ip }')
+curl http://$SERVICE_ADDRESS
+
+{{ else }}
+Portal is not accesible from outside. Consider changing option service.exposed to true.
+
+{{ end }}

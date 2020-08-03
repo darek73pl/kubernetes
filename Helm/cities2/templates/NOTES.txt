@@ -1,0 +1,42 @@
+
+Congratulations !!!
+
+You've just run {{ .Chart.Name }} variant {{ .Release.Name }}.
+
+Time is accessible for the following sites:
+{{- range  $i, $val:=.Values }}
+{{- if not (or (eq $i "ingress") (eq $i "default")) }}
+- {{ $i }}
+{{- end }}
+{{- end }}
+{{- if .Values.ingress.hostEnabled }}
+
+You may reach it by: 
+{{ range  $i, $val:=.Values }}
+{{- if not (or (eq $i "ingress") (eq $i "default")) }}
+http://{{ $val.service.ingressHost | default (print $.Release.Name  "-" $i "-webworker.local") }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if .Values.ingress.pathEnabled }}
+{{- if .Values.ingress.hostEnabled }}
+
+or
+{{ else }}
+
+You may reach it by: 
+{{ end }}
+
+{{- range  $i, $val:=.Values }}
+{{- if not (or (eq $i "ingress") (eq $i "default")) }}
+http://{{ $.Values.ingress.pathHost | default (print $.Release.Name "-" $.Chart.Name ".local") }}/{{ $i}}
+
+{{- end }}
+{{- end }}
+{{- end }}
+{{- if not (or .Values.ingress.pathEnabled .Values.ingress.hostEnabled) }}
+
+Portal is not accesible from outside. Consider enabling ingress options.
+
+{{ end }}
+

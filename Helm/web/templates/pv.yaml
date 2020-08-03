@@ -1,0 +1,22 @@
+{{- if or (eq .Values.type "web") (eq .Values.type "worker") }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-pv
+{{- with .Values.pv}}
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce		
+  persistentVolumeReclaimPolicy: Retain 
+  storageClassName: {{ .class }} 
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: {{ .nfs_path }}
+    server: {{ .nfs_server }}
+{{- end }}
+{{- end }}
