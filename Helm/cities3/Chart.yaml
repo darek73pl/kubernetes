@@ -2,19 +2,19 @@ apiVersion: v2			# mandatory, v2 for Helm 3
 name: city-webworker		# mandatory; name the same as directory
 version: 1.0.2			# mandatory; major.minor.patch
 appVersion: "1.0"
-description: Web-worker for updating time
+description: "Web-worker for updating time; two cities: torun and sopot"
 
 dependencies:
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: default
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: torun
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: sopot
   

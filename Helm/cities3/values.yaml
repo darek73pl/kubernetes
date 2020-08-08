@@ -1,21 +1,62 @@
 ingress:
-  hostEnabled: false
+  hostEnabled: true
   pathEnabled: true
   pathHost: colors.local
 
-torun:
-  webServer:
-    indexContent: torun
-    color: pink
-  service:
-    exposed: false
-
 sopot:
+  ingressHost: green-webworker.local
   webServer:
     indexContent: sopot
-    color: yellow
+    color: green
+    # replicas: 2
+    initScript: ""
+
+    labels: 
+      tier: frontend
+    annotations: {}
+
+  # updater:
+  #   enabled: true
+  #   updaterScript: ""
+
+  # image:
+  #   repository: nginx
+  #   version: 1.19
+
   service:
-    exposed: false  
+    exposed: false
+    port: 80
+    # if exposed portType=LoadBalancer; if not specify service type
+    type: ClusterIP
+    annotations: {}
+    
+
+torun:
+  ingressHost: red-webworker.local
+  webServer:
+    indexContent: torun
+    color: red
+    # replicas: 2
+    initScript: ""
+
+    labels:
+      tier: frontend
+    annotations: {}
+
+  # updater:
+  #   enabled: true
+  #   updaterScript: ""
+
+  # image:
+  #   repository: nginx
+  #   version: 1.19
+
+  service:
+    exposed: false
+    port: 80
+    # if exposed portType=LoadBalancer; if not specify service type
+    type: ClusterIP
+    annotations: {}
 
 default:
   webServer:
@@ -25,23 +66,3 @@ default:
     enabled: false
   service:
     exposed: false
-
-
-# webServer:
-#   indexContent: WEB
-#   color: green
-#   tier: frontend
-#   replicas: 3
-#   initScriptPath: "init-script.sh" 
-
-# updater:
-#   enabled: true
-#   updaterScriptPath: "updater-script.sh"
-
-# image:
-#   repository: nginx
-#   version: 1.19
-
-# service:
-#   exposed: true
-#   port: 80

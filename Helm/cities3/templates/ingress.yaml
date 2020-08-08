@@ -12,7 +12,7 @@ spec:
   rules:
     {{- range  $i, $val:=.Values }}
     {{- if not (or (eq $i "ingress") (eq $i "default")) }}
-    - host: {{ $val.service.ingressHost | default (print $.Release.Name  "-" $i "-webworker.local") }}
+    - host: {{ $val.ingressHost | default (print $.Release.Name  "-" $i "-webworker.local") }}
       http:
         paths:
           - backend:
