@@ -1,15 +1,15 @@
 dependencies:
 - name: webworker
   repository: http://repository.local:8081
-  version: 1.0.0
+  version: 1.2.0
 - name: webworker
   repository: http://repository.local:8081
-  version: 1.0.0
+  version: 1.2.0
 - name: webworker
   repository: http://repository.local:8081
-  version: 1.0.0
+  version: 1.2.0
 - name: webworker
   repository: http://repository.local:8081
-  version: 1.0.0
-digest: sha256:cd9a1a036a3f8efffe22579ffeee85f08454d85b933d3e50ff4c696fd48d2316
-generated: "2020-08-01T12:26:49.3890284+02:00"
+  version: 1.2.0
+digest: sha256:c5dc70f1d862e1a1d2cae8c1cb038c2179d74d068f684cb7631ba69f01f3dc3b
+generated: "2020-08-08T18:48:27.5249196+02:00"

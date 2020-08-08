@@ -6,12 +6,10 @@ metadata:
 data:
   INDEX_CONTENT: {{ .indexContent }}
   COLOR: {{ .color }}
-  init-script: |-
-{{ $.Files.Get .initScriptPath | indent 4 }}
 {{- end }}
-{{- with .Values.updater }}
-{{- if .enabled }}
-  updater-script: |-
-{{ $.Files.Get .updaterScriptPath | indent 4 }}
-{{- end }}
+  initScript: |-
+{{- include "webworker.initScript" . | indent 4 }}
+{{- if .Values.updater.enabled }}
+  updaterScript: |-
+{{- include "webworker.updaterScript" . | indent 4 }}
 {{- end }}

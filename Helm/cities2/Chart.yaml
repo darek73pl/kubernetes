@@ -6,19 +6,19 @@ description: Web-worker for updating time
 
 dependencies:
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: default
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: krakow
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: gdansk
   - name: webworker
-    version: ~1.0.0
+    version: ^1.0.0
     repository: http://repository.local:8081 
     alias: warszawa
 

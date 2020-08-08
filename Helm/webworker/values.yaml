@@ -2,13 +2,16 @@
 webServer:
   indexContent: WEB
   color: green
-  tier: frontend
-  replicas: 3
-  initScriptPath: "init-script.sh"
+  replicas: 1
+  initScript: ""
+
+  labels:
+    tier: frontend
+  annotations: {}
 
 updater:
   enabled: true
-  updaterScriptPath: "updater-script.sh"
+  updaterScript: ""
 
 image:
   repository: nginx
@@ -17,3 +20,6 @@ image:
 service:
   exposed: true
   port: 80
+  # if exposed portType=LoadBalancer; if not specify service type
+  type: ClusterIP
+  annotations: {}

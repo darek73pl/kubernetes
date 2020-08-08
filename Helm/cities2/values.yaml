@@ -1,31 +1,89 @@
 ingress:
-  hostEnabled: true
+  hostEnabled: false
   pathEnabled: true
   pathHost: colors.local
 
 gdansk:
+  ingressHost: green-webworker.local
   webServer:
     indexContent: gdansk
     color: green
+    # replicas: 2
+    initScript: ""
+
+    labels: 
+      tier: frontend
+    annotations: {}
+
+  # updater:
+  #   enabled: true
+  #   updaterScript: ""
+
+  # image:
+  #   repository: nginx
+  #   version: 1.19
+
   service:
     exposed: false
-    ingressHost: green-webworker.local
+    port: 80
+    # if exposed portType=LoadBalancer; if not specify service type
+    type: ClusterIP
+    annotations: {}
+    
 
 krakow:
+  ingressHost: red-webworker.local
   webServer:
     indexContent: krakow
     color: red
+    # replicas: 2
+    initScript: ""
+
+    labels:
+      tier: frontend
+    annotations: {}
+
+  # updater:
+  #   enabled: true
+  #   updaterScript: ""
+
+  # image:
+  #   repository: nginx
+  #   version: 1.19
+
   service:
-    exposed: false  
-    ingressHost: red-webworker.local
+    exposed: false
+    port: 80
+    # if exposed portType=LoadBalancer; if not specify service type
+    type: ClusterIP
+    annotations: {}
 
 warszawa:
+  ingressHost: blue-webworker.local
   webServer:
     indexContent: warszawa
     color: blue
+    # replicas: 2
+    initScript: ""
+
+    labels:
+      tier: frontend
+    annotations: {}
+
+  # updater:
+  #   enabled: true
+  #   updaterScript: ""
+
+  # image:
+  #   repository: nginx
+  #   version: 1.19
+
   service:
     exposed: false
-    ingressHost: blue-webworker.local
+    port: 80
+    # if exposed portType=LoadBalancer; if not specify service type
+    type: ClusterIP
+    annotations: {}
 
 default:
   webServer:
@@ -35,23 +93,3 @@ default:
     enabled: false
   service:
     exposed: false
-
-
-# webServer:
-#   indexContent: WEB
-#   color: green
-#   tier: frontend
-#   replicas: 3
-#   initScriptPath: "init-script.sh" 
-
-# updater:
-#   enabled: true
-#   updaterScriptPath: "updater-script.sh"
-
-# image:
-#   repository: nginx
-#   version: 1.19
-
-# service:
-#   exposed: true
-#   port: 80

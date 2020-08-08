@@ -1,4 +1,5 @@
 #!/bin/sh
+
 function create_index_html() {
   cat > /target/index.html<<EOF
   <html>

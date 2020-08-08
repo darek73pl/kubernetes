@@ -1,16 +1,22 @@
+{{- with .Values.service }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-{{ .Chart.Name }}-svc
+  name: {{ $.Release.Name }}-{{ $.Chart.Name }}-svc
+{{- with .annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
-{{- if .Values.service.exposed }}
+{{- if .exposed }}
   type: LoadBalancer 
 {{- else }}
-  type: ClusterIP
+  type: {{ .type }}
 {{- end }}
   selector:
-    app: {{ .Release.Name }}-{{ .Chart.Name }}-webworker
+    app: {{ $.Release.Name }}-{{ $.Chart.Name }}-webworker
   ports:
     - protocol: TCP
-      port: {{ .Values.service.port | default 80 }}
+      port: {{ .port | default 80 }}
       targetPort: 80
+{{- end }}

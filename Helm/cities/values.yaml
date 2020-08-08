@@ -16,7 +16,7 @@ krakow:
     indexContent: krakow
     color: red
   service:
-    exposed: false  
+    exposed: false
     ingressHost: red-webworker.local
 
 warszawa:

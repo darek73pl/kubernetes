@@ -2,8 +2,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Release.Name }}-{{ .Chart.Name }}-depl
+{{- with .Values.webServer.labels }}
   labels:
-    tier: {{ .Values.webServer.tier }}
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with .Values.webServer.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
 spec:
   replicas: {{ .Values.webServer.replicas }}
   selector:
@@ -92,7 +98,7 @@ spec:
             defaultMode: 0700
             name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
             items:
-              - key: init-script 
+              - key: initScript 
                 path: init.sh    
         {{- if .Values.updater.enabled }}      
         - name: updater-script-vol
@@ -100,6 +106,6 @@ spec:
             defaultMode: 0700
             name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
             items:
-              - key: updater-script 
+              - key: updaterScript 
                 path: updater.sh  
         {{- end }}
